@@ -2,7 +2,7 @@
 /**
  * Gets the Track Inforation for a given SoundCloud track url.
  */
-function soundcloud_get_track_info($track_url) {
+function soundcloud_api_get_track_info($track_url) {
   // Get the library info.
   $library_path = libraries_get_path('php-soundcloud') . '/Services/Soundcloud.php';
   if (!file_exists($library_path)) {
