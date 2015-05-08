@@ -1,0 +1,49 @@
+<?php
+/**
+ * Gets the Track Inforation for a given SoundCloud track url.
+ */
+function soundcloud_get_track_info($track_url) {
+  // Get the library info.
+  $library_path = libraries_get_path('php-soundcloud') . '/Services/Soundcloud.php';
+  if (!file_exists($library_path)) {
+    drupal_set_message('php-soundcloud: The google-api-php-client library was not found.', 'error');
+    return;
+  }
+  include_once($library_path);
+
+  // Create a client object with your app credentials.
+  $client_id = variable_get('soundcloud_api_client_id', '');
+  $client_secret = variable_get('soundcloud_api_client_secret', '');
+  $client = new Services_Soundcloud($client_id, $client_secret);
+
+  $client->setCurlOptions(array(CURLOPT_FOLLOWLOCATION => 1));
+  $client->setCurlOptions(array(CURLOPT_SSL_VERIFYPEER => 0));
+
+  // resolve track URL into track resource
+  $track_info = json_decode($client->get('resolve', array('url' => $track_url)));
+
+  return $track_info;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function soundcloud_api_libraries_info() {
+  $libraries['php-soundcloud'] = array(
+    'name' => 'Php SoundCloud',
+    'vendor url' => 'https://github.com/mptre/php-soundcloud',
+    'download url' => 'https://github.com/mptre/php-soundcloud.git',
+    'path' => 'src',
+    'version arguments' => array(
+      'file' => 'CHANGELOG.md',
+      'pattern' => '@^## v([\d\.]+)@',
+      'lines' => 1,
+    ),
+    'files' => array(
+      'php' => array(
+        'Services/Soundcloud.php',
+      ),
+    ),
+  );
+  return $libraries;
+}
