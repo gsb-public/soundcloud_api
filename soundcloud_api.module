@@ -1,4 +1,30 @@
 <?php
+
+function soundcloud_api_menu() {
+  $items = array();
+
+  // Admin form
+  $items['admin/config/media/soundcloud-api'] = array(
+    'title' => 'Soundcloud api settings',
+    'description' => 'Configure the soundcloud api settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('soundcloud_api_admin_config'),
+    'access arguments' => array('administer soundcloud api'),
+    'file' => 'includes/soundcloud_api.admin.inc',
+  );
+
+  return $items;
+}
+
+function soundcloud_api_permission() {
+  return array(
+    'administer soundcloud api' => array(
+      'title' => t('Administer Soundcloud API'),
+      'description' => t('Edit the settings for soundcloud api.'),
+    ),
+  );
+}
+
 /**
  * Gets the Track Inforation for a given SoundCloud track url.
  */
